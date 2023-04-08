@@ -1,4 +1,4 @@
-package yegor.cheprasov.fluentflow.decompose.words
+package yegor.cheprasov.fluentflow.decompose.words.information
 
 import com.arkivanov.decompose.ComponentContext
 import yegor.cheprasov.fluentflow.decompose.BaseComponent

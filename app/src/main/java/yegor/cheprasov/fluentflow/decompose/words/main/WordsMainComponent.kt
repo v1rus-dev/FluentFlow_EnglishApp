@@ -2,7 +2,7 @@ package yegor.cheprasov.fluentflow.decompose.words.main
 
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
-import yegor.cheprasov.fluentflow.decompose.words.WordsInformationComponent
+import yegor.cheprasov.fluentflow.decompose.words.information.WordsInformationComponent
 
 interface WordsMainComponent {
 

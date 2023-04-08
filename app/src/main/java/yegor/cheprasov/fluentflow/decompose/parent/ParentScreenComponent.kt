@@ -6,7 +6,6 @@ import yegor.cheprasov.fluentflow.decompose.exercise.ExerciseComponent
 import yegor.cheprasov.fluentflow.decompose.game.GameComponent
 import yegor.cheprasov.fluentflow.decompose.grammarThemes.main.GrammarMainScreen
 import yegor.cheprasov.fluentflow.decompose.mainScreen.main.MainComponent
-import yegor.cheprasov.fluentflow.decompose.words.WordsInformationComponent
 import yegor.cheprasov.fluentflow.decompose.words.main.WordsMainComponent
 
 interface ParentScreenComponent {

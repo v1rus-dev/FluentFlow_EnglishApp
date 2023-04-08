@@ -8,8 +8,8 @@ import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.parcelable.Parcelable
 import com.arkivanov.essenty.parcelable.Parcelize
 import yegor.cheprasov.fluentflow.decompose.BaseComponent
-import yegor.cheprasov.fluentflow.decompose.words.RealWordsInformationComponent
-import yegor.cheprasov.fluentflow.decompose.words.WordsInformationComponent
+import yegor.cheprasov.fluentflow.decompose.words.information.RealWordsInformationComponent
+import yegor.cheprasov.fluentflow.decompose.words.information.WordsInformationComponent
 import yegor.cheprasov.fluentflow.ui.compose.mainScreen.screens.words.WordsTopicViewEntity
 
 class RealWordsMainComponent(
