@@ -1,0 +1,93 @@
+{
+  "project_info": {
+    "project_number": "596066306610",
+    "firebase_url": "https://fluentflow-english-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "fluentflow-english",
+    "storage_bucket": "fluentflow-english.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:596066306610:android:7fcc7ad71f216053e90a2b",
+        "android_client_info": {
+          "package_name": "yegor.cheprasov.fluentflow"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "596066306610-3q6tqgs3j3qr1n5449to7u76q6ojfjks.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "yegor.cheprasov.fluentflow",
+            "certificate_hash": "0f86ed0024ccaf53dac990870bd4e2eb523af405"
+          }
+        },
+        {
+          "client_id": "596066306610-m577ege25uu3mrdc8sbsohgsanjnq3rq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "yegor.cheprasov.fluentflow",
+            "certificate_hash": "e51bc73ee63df40c7af7466b487e1f0a760a16e3"
+          }
+        },
+        {
+          "client_id": "596066306610-tsh1b68lr9vfir4k9emijofsn2j60kn3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3pOV_ao4OFEgo-YczQYc7S80FfqB-Q58"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "596066306610-tsh1b68lr9vfir4k9emijofsn2j60kn3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:596066306610:android:6f9084a3ae348060e90a2b",
+        "android_client_info": {
+          "package_name": "yegor.cheprasov.fluentflow.admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "596066306610-03a06ds6oe2od3qa944kr5hortfcpb47.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "yegor.cheprasov.fluentflow.admin",
+            "certificate_hash": "bf5760a91d7909cfca1168b432736ded3415a8b0"
+          }
+        },
+        {
+          "client_id": "596066306610-tsh1b68lr9vfir4k9emijofsn2j60kn3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3pOV_ao4OFEgo-YczQYc7S80FfqB-Q58"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "596066306610-tsh1b68lr9vfir4k9emijofsn2j60kn3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
