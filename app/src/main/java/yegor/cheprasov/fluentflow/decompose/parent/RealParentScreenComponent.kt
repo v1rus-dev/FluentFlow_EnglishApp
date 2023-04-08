@@ -14,14 +14,13 @@ import yegor.cheprasov.fluentflow.decompose.exercise.ExerciseComponent
 import yegor.cheprasov.fluentflow.decompose.exercise.RealExerciseComponent
 import yegor.cheprasov.fluentflow.decompose.game.GameComponent
 import yegor.cheprasov.fluentflow.decompose.game.RealGameComponent
-import yegor.cheprasov.fluentflow.decompose.grammarThemes.GrammarThemesComponent
-import yegor.cheprasov.fluentflow.decompose.grammarThemes.RealGrammarThemesComponent
 import yegor.cheprasov.fluentflow.decompose.grammarThemes.main.GrammarMainScreen
 import yegor.cheprasov.fluentflow.decompose.grammarThemes.main.RealGrammarMainScreen
 import yegor.cheprasov.fluentflow.decompose.mainScreen.main.MainComponent
 import yegor.cheprasov.fluentflow.decompose.mainScreen.main.RealMainComponent
-import yegor.cheprasov.fluentflow.decompose.words.RealWordsComponent
-import yegor.cheprasov.fluentflow.decompose.words.WordsComponent
+import yegor.cheprasov.fluentflow.decompose.words.main.RealWordsMainComponent
+import yegor.cheprasov.fluentflow.decompose.words.main.WordsMainComponent
+import yegor.cheprasov.fluentflow.ui.compose.mainScreen.screens.words.WordsTopicViewEntity
 
 class RealParentScreenComponent(
     componentContext: ComponentContext
@@ -51,7 +50,7 @@ class RealParentScreenComponent(
             ParentConfiguration.GrammarThemes -> ParentScreenComponent.Child.GrammarThemes(
                 grammarThemes(componentContext)
             )
-            ParentConfiguration.Words -> ParentScreenComponent.Child.Words(words(componentContext))
+            is ParentConfiguration.Words -> ParentScreenComponent.Child.Words(words(componentContext, config.topic))
         }
 
     private fun main(componentContext: ComponentContext): MainComponent =
@@ -65,6 +64,9 @@ class RealParentScreenComponent(
                 }
                 MainComponent.Event.OpenGrammars -> {
                     navigation.push(ParentConfiguration.GrammarThemes)
+                }
+                is MainComponent.Event.OpenTopicWords -> {
+                    navigation.push(ParentConfiguration.Words(it.topic))
                 }
             }
         }
@@ -80,8 +82,10 @@ class RealParentScreenComponent(
     private fun game(componentContext: ComponentContext): GameComponent =
         RealGameComponent(componentContext)
 
-    private fun words(componentContext: ComponentContext): WordsComponent =
-        RealWordsComponent(componentContext)
+    private fun words(componentContext: ComponentContext, topic: WordsTopicViewEntity): WordsMainComponent =
+        RealWordsMainComponent(componentContext, topic) {
+            navigation.pop()
+        }
 
     private sealed class ParentConfiguration : Parcelable {
 
@@ -98,7 +102,7 @@ class RealParentScreenComponent(
         object Game : ParentConfiguration()
 
         @Parcelize
-        object Words : ParentConfiguration()
+        data class Words(val topic: WordsTopicViewEntity) : ParentConfiguration()
 
     }
 

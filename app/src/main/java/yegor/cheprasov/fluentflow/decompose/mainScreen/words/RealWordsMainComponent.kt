@@ -18,7 +18,8 @@ import yegor.cheprasov.fluentflow.ui.compose.mainScreen.screens.words.state.Word
 import yegor.cheprasov.fluentflow.utils.reduceMain
 
 class RealWordsMainComponent(
-    componentContext: ComponentContext
+    componentContext: ComponentContext,
+    private val _openTopic: (WordsTopicViewEntity) -> Unit
 ) : BaseComponent(componentContext), WordsMainComponent {
 
     private val wordsUseCase: WordsUseCase by inject()
@@ -37,9 +38,7 @@ class RealWordsMainComponent(
 
     override val uiState: Value<WordsState> = _uiState
 
-    override fun openTopic(topic: WordsTopicViewEntity) {
-
-    }
+    override fun openTopic(topic: WordsTopicViewEntity) = _openTopic(topic)
 
     private fun loadWordsTopics() = scope.launch {
         wordsUseCase.loadWordsTopics()
