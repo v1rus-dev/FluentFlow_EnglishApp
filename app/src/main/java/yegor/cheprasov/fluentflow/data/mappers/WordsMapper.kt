@@ -31,7 +31,8 @@ class WordsMapper {
         allCount = 0,
         endedCount = 0,
         imagePath = Uri.parse(value.imagePath),
-        fileName = value.fileName
+        fileName = value.fileName,
+        topicId = value.topicId
     )
 
 }

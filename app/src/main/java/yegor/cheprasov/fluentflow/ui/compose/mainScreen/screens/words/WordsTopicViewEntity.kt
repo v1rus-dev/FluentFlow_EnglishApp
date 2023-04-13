@@ -10,5 +10,6 @@ data class WordsTopicViewEntity(
     val allCount: Int,
     val endedCount: Int,
     val imagePath: Uri,
-    val fileName: String
+    val fileName: String,
+    val topicId: Int
 ): Parcelable

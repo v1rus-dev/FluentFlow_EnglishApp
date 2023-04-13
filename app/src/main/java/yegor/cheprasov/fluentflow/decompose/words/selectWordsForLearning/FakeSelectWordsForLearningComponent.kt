@@ -25,5 +25,5 @@ class FakeSelectWordsForLearningComponent : SelectWordsForLearningComponent {
             selectedCount = 1
         ))
 
-    override fun onEvent(event: SelectWordsForLearningComponent.Event) = Unit
+    override fun event(event: SelectWordsForLearningComponent.Event) = Unit
 }

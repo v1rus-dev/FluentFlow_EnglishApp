@@ -84,7 +84,8 @@ private fun PreviewTopicListItem() {
             allCount = 24,
             endedCount = 10,
             imagePath = Uri.EMPTY,
-            fileName = ""
+            fileName = "",
+            topicId = 0
         )
     ) {}
 }

@@ -8,7 +8,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.childContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
-import com.arkivanov.decompose.value.reduce
+import com.arkivanov.decompose.value.update
 import yegor.cheprasov.fluentflow.decompose.BaseComponent
 import yegor.cheprasov.fluentflow.decompose.mainScreen.profile.ProfileMainComponent
 import yegor.cheprasov.fluentflow.decompose.mainScreen.profile.RealProfileMainComponent
@@ -57,7 +57,7 @@ class RealMainComponent(
     )
 
     override fun selectItem(newItem: MainComponent.MenuItem) {
-        _selectedItem.reduce { newItem }
+        _selectedItem.update { newItem }
     }
 
     override fun onEvent(event: MainComponent.Event) {

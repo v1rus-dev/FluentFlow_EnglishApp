@@ -85,6 +85,8 @@ dependencies {
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.storage)
 
+    implementation("com.google.code.gson:gson:2.10.1")
+
     implementation(libs.gson)
 
     implementation(libs.flow.row)

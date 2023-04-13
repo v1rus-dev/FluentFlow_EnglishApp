@@ -6,7 +6,7 @@ import androidx.compose.material.icons.outlined.Comment
 import androidx.compose.material.icons.outlined.Person
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
-import com.arkivanov.decompose.value.reduce
+import com.arkivanov.decompose.value.update
 import yegor.cheprasov.fluentflow.decompose.mainScreen.profile.FakeProfileComponent
 import yegor.cheprasov.fluentflow.decompose.mainScreen.profile.ProfileMainComponent
 import yegor.cheprasov.fluentflow.decompose.mainScreen.themes.FakeThemesMainComponent
@@ -26,7 +26,7 @@ class FakeMainComponent : MainComponent {
 
     override fun onEvent(event: MainComponent.Event) = Unit
     override fun selectItem(newItem: MainComponent.MenuItem) {
-        _selectedItem.reduce { newItem }
+        _selectedItem.update { newItem }
     }
 
     override val bottomNavItems: List<MainComponent.MenuItem>
