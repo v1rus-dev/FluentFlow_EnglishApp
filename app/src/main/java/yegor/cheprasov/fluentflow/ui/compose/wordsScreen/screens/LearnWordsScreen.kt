@@ -1,5 +1,6 @@
 package yegor.cheprasov.fluentflow.ui.compose.wordsScreen.screens
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -23,9 +24,11 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -37,11 +40,10 @@ import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import yegor.cheprasov.fluentflow.decompose.dialog.DialogState
 import yegor.cheprasov.fluentflow.decompose.words.learn.FakeLearnWordsComponent
 import yegor.cheprasov.fluentflow.decompose.words.learn.LearnWordsComponent
-import yegor.cheprasov.fluentflow.decompose.words.selectWordsForLearning.SelectWordsForLearningComponent
 import yegor.cheprasov.fluentflow.ui.compose.wordsScreen.state.LearnWordsState
-import yegor.cheprasov.fluentflow.ui.compose.wordsScreen.state.SelectWordsForLearningState
 import yegor.cheprasov.fluentflow.ui.compose.wordsScreen.viewEntity.LearnWordsTranslateViewEntity
 import yegor.cheprasov.fluentflow.ui.compose.wordsScreen.viewEntity.LearnWordsViewEntity
 
@@ -52,6 +54,35 @@ fun LearnWordsScreen(component: LearnWordsComponent) {
 
     val coroutineScope = rememberCoroutineScope()
     val pagerState = rememberPagerState()
+
+    val dialogSlot by component.errorDialog.subscribeAsState()
+    var currentPage: Int by remember {
+        mutableStateOf(0)
+    }
+
+    val onDismissDialog: () -> Unit = remember {
+        {
+            Log.d("myTag", "dismissDialog")
+            if (currentPage != (uiState.value as LearnWordsState.Success).words.lastIndex) {
+                coroutineScope.launch {
+                    currentPage++
+                    pagerState.animateScrollToPage(currentPage)
+                }
+            } else {
+                component.event(LearnWordsComponent.Event.OnFinish)
+            }
+        }
+    }
+
+    dialogSlot.child?.instance?.also {
+        val state by it.state.subscribeAsState()
+        with(state as DialogState.ErrorDialogState) {
+            LearnErrorDialog(word = word, correctAnswer = correctWord, chooseAnswer = chooseWord) {
+                it.onDismissClicked()
+                onDismissDialog()
+            }
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -85,11 +116,26 @@ fun LearnWordsScreen(component: LearnWordsComponent) {
                         userScrollEnabled = false,
                         pageSpacing = 16.dp
                     ) { pageIndex ->
-                        Page(viewEntity = (uiState.value as LearnWordsState.Success).words[pageIndex]) {
+                        Page(
+                            viewEntity = (uiState.value as LearnWordsState.Success).words[pageIndex],
+                            notCorrect = { word, selectWords, correctWord ->
+                                component.event(
+                                    LearnWordsComponent.Event.ShowErrorDialog(
+                                        word,
+                                        correctWord,
+                                        selectWords
+                                    )
+                                )
+                            }
+                        ) {
+                            component.event(LearnWordsComponent.Event.Learned(it))
                             if (pageIndex != (uiState.value as LearnWordsState.Success).words.lastIndex) {
+                                currentPage++
                                 coroutineScope.launch {
                                     pagerState.animateScrollToPage(pageIndex + 1)
                                 }
+                            } else {
+                                component.event(LearnWordsComponent.Event.OnFinish)
                             }
                         }
                     }
@@ -100,9 +146,11 @@ fun LearnWordsScreen(component: LearnWordsComponent) {
 }
 
 @Composable
-private fun Page(viewEntity: LearnWordsViewEntity, goToNext: () -> Unit) {
-
-    val coroutineScope = rememberCoroutineScope()
+private fun Page(
+    viewEntity: LearnWordsViewEntity,
+    notCorrect: (String, String, String) -> Unit,
+    goToNext: (LearnWordsViewEntity) -> Unit
+) {
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -142,64 +190,90 @@ private fun Page(viewEntity: LearnWordsViewEntity, goToNext: () -> Unit) {
                         Spacer(modifier = Modifier.height(16.dp))
                     }
                 }
-                viewEntity.translations.forEach {
 
-                    val isCorrect = remember {
-                        mutableStateOf<Boolean?>(null)
-                    }
+                PagePart(
+                    list = viewEntity.translations,
+                    notCorrect = { selectedWord: String, correctWord: String ->
+                        notCorrect(viewEntity.word, selectedWord, correctWord)
+                    }) {
+                    goToNext(viewEntity)
+                }
+            }
+        }
+    }
+}
 
-                    val checkWords: (LearnWordsTranslateViewEntity) -> Unit = remember {
-                        {
-                            isCorrect.value = it.isCorrect
+@Composable
+fun PagePart(
+    list: List<LearnWordsTranslateViewEntity>,
+    notCorrect: (String, String) -> Unit,
+    goToNext: () -> Unit
+) {
 
-                            if (it.isCorrect) {
-                                coroutineScope.launch(Dispatchers.IO) {
-                                    delay(1500)
-                                    goToNext()
-                                }
+    val coroutineScope = rememberCoroutineScope()
+
+    var isClicked by remember {
+        mutableStateOf(false)
+    }
+
+    var isCorrectClick by remember {
+        mutableStateOf(false)
+    }
+
+    var isClickedWord by remember {
+        mutableStateOf("")
+    }
+
+    val isClickedCorrect = remember {
+        {
+            coroutineScope.launch(Dispatchers.IO) {
+                delay(1500)
+                goToNext()
+            }
+        }
+    }
+
+    Column(modifier = Modifier.fillMaxWidth()) {
+        list.forEach { viewEntity ->
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        if (isClicked && isClickedWord == viewEntity.word) {
+                            if (isCorrectClick) {
+                                Color(0xFF00B733)
+
+                            } else {
+                                Color(0xFFCE0000)
+
                             }
+                        } else {
+                            Color(0xFFFBFBFB)
+                        }
+                    )
+                    .clickable(enabled = !isClicked) {
+                        isClicked = true
+                        isClickedWord = viewEntity.word
+                        isCorrectClick = viewEntity.isCorrect
+                        if (viewEntity.isCorrect) {
+                            isClickedCorrect()
+                        } else {
+                            notCorrect(
+                                viewEntity.word,
+                                list.firstOrNull { it.isCorrect }?.word ?: ""
+                            )
                         }
                     }
-
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(
-                                when (isCorrect.value) {
-                                    null -> {
-                                        Color(0xFFFBFBFB)
-                                    }
-
-                                    false -> {
-                                        Color(0xFFCE0000)
-                                    }
-
-                                    else -> {
-                                        Color(0xFF00B733)
-                                    }
-                                }
-                            )
-                            .clickable {
-                                if (isCorrect.value == null) {
-                                    checkWords(it)
-                                }
-                            }
-                            .padding(vertical = 26.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                            text = it.word.lowercase(),
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = if (isCorrect.value != null) {
-                                Color.White
-                            } else {
-                                Color.Black
-                            }
-                        )
-                    }
-                }
+                    .padding(vertical = 26.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = viewEntity.word.lowercase(),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Medium,
+                    color = Color.Black
+                )
             }
         }
     }

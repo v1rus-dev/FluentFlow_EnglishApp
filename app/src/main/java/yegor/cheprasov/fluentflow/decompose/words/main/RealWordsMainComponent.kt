@@ -98,8 +98,8 @@ class RealWordsMainComponent(
         componentContext: ComponentContext,
         list: List<WordsForLearningViewEntity>
     ): LearnWordsComponent =
-        RealLearnWordsComponent(componentContext, list) {
-
+        RealLearnWordsComponent(componentContext, list, topic.topicId) {
+            _onClose()
         }
 
     private sealed interface Config : Parcelable {

@@ -7,5 +7,6 @@ data class LearnWordsViewEntity(
 
 data class LearnWordsTranslateViewEntity(
     val word: String,
-    val isCorrect: Boolean
+    val isCorrect: Boolean,
+    var isClicked: Boolean = false
 )

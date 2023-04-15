@@ -16,6 +16,8 @@ import yegor.cheprasov.fluentflow.data.room.dao.WordsDao
 import yegor.cheprasov.fluentflow.data.room.dao.WordsTopicDao
 import yegor.cheprasov.fluentflow.data.room.entities.WordsEntity
 import yegor.cheprasov.fluentflow.data.room.entities.WordsTopicEntity
+import yegor.cheprasov.fluentflow.data.utils.map as appMap
+import yegor.cheprasov.fluentflow.ui.compose.wordsScreen.viewEntity.LearnWordsViewEntity
 import java.io.File
 import java.io.FileReader
 
@@ -38,6 +40,16 @@ class WordsRepository(
     fun observeAllWordTopics(): Flow<List<WordsTopicEntity>> = wordsTopicDao.observeAll()
 
     suspend fun getAllByTopicId(topicId: Int) = wordsDao.getAllByTopicId(topicId)
+
+    suspend fun saveWordAsLearned(wordsViewEntity: LearnWordsViewEntity, topicId: Int) =
+        wordsDao.saveWordAsLearned(wordsViewEntity.appMap {
+            WordsEntity(
+                translate = wordsViewEntity.translations.first { it.isCorrect }.word,
+                word = wordsViewEntity.word,
+                topicId = topicId,
+                isLearned = true
+            )
+        })
 
     private suspend fun loadWords(words: List<WordsTopicNetworkEntity>) {
         val newWordsForDb = arrayListOf<WordsEntity>()

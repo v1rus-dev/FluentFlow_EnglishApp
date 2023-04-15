@@ -1,7 +1,10 @@
 package yegor.cheprasov.fluentflow.decompose.words.learn
 
+import com.arkivanov.decompose.router.slot.ChildSlot
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
+import yegor.cheprasov.fluentflow.decompose.dialog.DialogComponent
+import yegor.cheprasov.fluentflow.decompose.dialog.DialogState
 import yegor.cheprasov.fluentflow.ui.compose.wordsScreen.state.LearnWordsState
 import yegor.cheprasov.fluentflow.ui.compose.wordsScreen.viewEntity.LearnWordsTranslateViewEntity
 import yegor.cheprasov.fluentflow.ui.compose.wordsScreen.viewEntity.LearnWordsViewEntity
@@ -34,6 +37,10 @@ class FakeLearnWordsComponent : LearnWordsComponent {
                     )
                 )
             )
+        )
+    override val errorDialog: Value<ChildSlot<*, DialogComponent>>
+        get() = MutableValue(
+            ChildSlot<Unit, DialogComponent>(child = null)
         )
 
     override fun event(event: LearnWordsComponent.Event) = Unit
