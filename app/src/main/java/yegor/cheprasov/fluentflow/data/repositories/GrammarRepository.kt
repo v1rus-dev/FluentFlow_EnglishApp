@@ -28,9 +28,9 @@ class GrammarRepository(
 ) {
 
     suspend fun loadGrammars() {
-        val snapshop = firestore.db.collection("grammars").get().await()
+        val snapshot = firestore.grammars.get().await()
         val grammarEntitiesNetwork =
-            snapshop.documents.mapNotNull { it.toObject(GrammarNetworkEntity::class.java) }
+            snapshot.documents.mapNotNull { it.toObject(GrammarNetworkEntity::class.java) }
                 .map { grammarNetworkMapper.map(it) }
         insertToDatabase(grammarEntitiesNetwork)
     }

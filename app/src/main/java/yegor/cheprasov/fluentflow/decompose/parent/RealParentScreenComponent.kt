@@ -77,7 +77,9 @@ class RealParentScreenComponent(
         }
 
     private fun exercises(componentContext: ComponentContext): ExerciseComponent =
-        RealExerciseComponent(componentContext)
+        RealExerciseComponent(componentContext) {
+            navigation.pop()
+        }
 
     private fun game(componentContext: ComponentContext): GameComponent =
         RealGameComponent(componentContext)

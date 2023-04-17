@@ -30,7 +30,7 @@ class WordsRepository(
 ) {
 
     suspend fun loadWordTopic() {
-        val snapshot = appFirestore.db.collection("words").get().await()
+        val snapshot = appFirestore.words.get().await()
         val words =
             snapshot.documents.mapNotNull { it.toObject(WordsTopicNetworkEntity::class.java) }
         insertToDb(words)

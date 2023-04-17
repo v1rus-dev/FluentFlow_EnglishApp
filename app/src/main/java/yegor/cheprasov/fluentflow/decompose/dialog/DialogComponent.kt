@@ -18,4 +18,8 @@ sealed interface DialogState {
         val chooseWord: String
     ) : DialogState
 
+    data class SuccessDialogState(
+        val word: String
+    ) : DialogState
+
 }

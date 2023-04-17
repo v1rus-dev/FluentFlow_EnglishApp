@@ -43,6 +43,7 @@ import yegor.cheprasov.fluentflow.decompose.words.selectWordsForLearning.FakeSel
 import yegor.cheprasov.fluentflow.decompose.words.selectWordsForLearning.SelectWordsForLearningComponent
 import yegor.cheprasov.fluentflow.ui.compose.components.AppButton
 import yegor.cheprasov.fluentflow.ui.compose.components.Percentage
+import yegor.cheprasov.fluentflow.ui.compose.components.SoundButton
 import yegor.cheprasov.fluentflow.ui.compose.wordsScreen.state.SelectWordsForLearningState
 import yegor.cheprasov.fluentflow.ui.compose.wordsScreen.viewEntity.WordsForLearningViewEntity
 import yegor.cheprasov.fluentflow.ui.theme.background
@@ -189,21 +190,7 @@ private fun Page(
                     modifier = Modifier.padding(top = 16.dp),
                     color = Color.LightGray
                 )
-                Card(
-                    onClick = {},
-                    shape = CircleShape,
-                    backgroundColor = Color(0xFFBD6EEB),
-                    modifier = Modifier
-                        .padding(top = 26.dp)
-                        .size(50.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.VolumeUp,
-                        contentDescription = null,
-                        tint = Color.White,
-                        modifier = Modifier.padding(13.dp)
-                    )
-                }
+                SoundButton(word = viewEntity.word)
             }
             Column {
                 Card(
