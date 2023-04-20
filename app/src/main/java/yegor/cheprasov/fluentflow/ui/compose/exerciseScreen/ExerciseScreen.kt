@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -19,8 +20,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,10 +31,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
-import yegor.cheprasov.fluentflow.data.room.entities.ExerciseEntity
+import com.google.accompanist.flowlayout.FlowCrossAxisAlignment
+import com.google.accompanist.flowlayout.FlowMainAxisAlignment
+import com.google.accompanist.flowlayout.FlowRow
 import yegor.cheprasov.fluentflow.decompose.dialog.DialogState
 import yegor.cheprasov.fluentflow.decompose.exercise.ExerciseComponent
 import yegor.cheprasov.fluentflow.decompose.exercise.FakeExerciseComponent
+import yegor.cheprasov.fluentflow.ui.compose.components.AppButton
 import yegor.cheprasov.fluentflow.ui.compose.components.LoadingScreen
 import yegor.cheprasov.fluentflow.ui.compose.components.SoundButton
 import yegor.cheprasov.fluentflow.ui.compose.exerciseScreen.state.ExerciseState
@@ -88,7 +93,13 @@ fun ExerciseScreen(component: ExerciseComponent) {
         ) {
             when (val state = uiState) {
                 is ExerciseState.CurrentExercise -> {
-                    CurrentExerciseScreen(state.exercise)
+                    CurrentExerciseScreen(state = state, removeWord = {
+                        component.event(ExerciseComponent.Event.RemoveWord(it))
+                    }, selectWord = {
+                        component.event(ExerciseComponent.Event.SelectWord(it))
+                    }, check = {
+                        component.event(ExerciseComponent.Event.Check)
+                    })
                 }
 
                 ExerciseState.Loading -> LoadingScreen()
@@ -98,12 +109,12 @@ fun ExerciseScreen(component: ExerciseComponent) {
 }
 
 @Composable
-fun CurrentExerciseScreen(exercise: ExerciseEntity) {
-
-    val selectedWords = remember {
-        mutableStateListOf<String>()
-    }
-
+fun CurrentExerciseScreen(
+    state: ExerciseState.CurrentExercise,
+    selectWord: (SelectWordViewEntity) -> Unit,
+    removeWord: (SelectWordViewEntity) -> Unit,
+    check: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -111,19 +122,41 @@ fun CurrentExerciseScreen(exercise: ExerciseEntity) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        SoundButton(word = exercise.sentense)
+        SoundButton(word = state.sentense)
         Text(
-            text = exercise.sentense,
+            text = state.sentense,
             fontSize = 18.sp,
             fontWeight = FontWeight.Medium,
             modifier = Modifier.padding(top = 16.dp)
         )
-
+        EnteredWords(
+            words = state.exercise.selectWords,
+            modifier = Modifier.padding(top = 16.dp)
+        ) { word: SelectWordViewEntity ->
+            removeWord(word)
+        }
+        SelectWordsPart(
+            words = state.exercise.allWords,
+            modifier = Modifier.padding(top = 16.dp),
+            onSelect = { word ->
+                selectWord(word)
+            }
+        )
+        Column(modifier = Modifier.fillMaxWidth()) {
+            Spacer(modifier = Modifier.weight(1f))
+            AppButton(text = "Проверить ответ", modifier = Modifier.padding(bottom = 22.dp)) {
+                check()
+            }
+        }
     }
 }
 
 @Composable
-private fun EnteredWords(words: List<String>, modifier: Modifier = Modifier) {
+private fun EnteredWords(
+    words: List<SelectWordViewEntity>,
+    modifier: Modifier = Modifier,
+    removeWord: (SelectWordViewEntity) -> Unit
+) {
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -132,21 +165,90 @@ private fun EnteredWords(words: List<String>, modifier: Modifier = Modifier) {
         border = BorderStroke(1.dp, Color.LightGray),
         backgroundColor = Color.White
     ) {
+        FlowRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp),
+            mainAxisSpacing = 8.dp,
+            crossAxisSpacing = 4.dp
+        ) {
+            words.forEach {
+                Word(word = it, onRemove = removeWord)
+            }
+        }
+    }
+}
 
+@Composable
+private fun SelectWordsPart(
+    words: List<SelectWordViewEntity>,
+    modifier: Modifier = Modifier,
+    onSelect: (SelectWordViewEntity) -> Unit
+) {
+    FlowRow(
+        modifier = modifier.fillMaxWidth(),
+        mainAxisSpacing = 8.dp,
+        crossAxisSpacing = 4.dp,
+        mainAxisAlignment = FlowMainAxisAlignment.Center,
+        crossAxisAlignment = FlowCrossAxisAlignment.Center
+    ) {
+        words.forEach { word ->
+            SelectWord(word = word, onSelect)
+        }
     }
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-private fun Word(word: String, onRemove: (String) -> Unit) {
+private fun Word(word: SelectWordViewEntity, onRemove: (SelectWordViewEntity) -> Unit) {
     Card(
         onClick = {
             onRemove(word)
         },
         shape = RoundedCornerShape(20.dp),
+        backgroundColor = Color(0xFFEEEEEF),
         border = BorderStroke(1.dp, Color.LightGray)
     ) {
-        Text(text = word,)
+        Text(
+            text = word.text,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Medium,
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+private fun SelectWord(word: SelectWordViewEntity, onClick: (SelectWordViewEntity) -> Unit) {
+    val isSelected = word.isSelected
+    Card(
+        onClick = {
+            onClick(word)
+        },
+        shape = RoundedCornerShape(20.dp),
+        backgroundColor = if (!isSelected) {
+            Color.White
+        } else {
+            Color.Gray
+        },
+        contentColor = if (!isSelected) {
+            Color.Black
+        } else {
+            Color.Gray
+        },
+        border = if (!isSelected) {
+            BorderStroke(1.dp, Color.LightGray)
+        } else {
+            null
+        }
+    ) {
+        Text(
+            text = word.text,
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+            fontSize = 15.sp,
+            fontWeight = FontWeight.Medium
+        )
     }
 }
 
@@ -154,4 +256,14 @@ private fun Word(word: String, onRemove: (String) -> Unit) {
 @Composable
 private fun PreviewExerciseScreen() {
     ExerciseScreen(component = FakeExerciseComponent())
+}
+
+@Preview
+@Composable
+private fun PreviewSelectWord() {
+    var isSelected by remember {
+        mutableStateOf(false)
+    }
+    SelectWord(word = SelectWordViewEntity("смотрю")) {}
+
 }

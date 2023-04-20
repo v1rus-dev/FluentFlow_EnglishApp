@@ -3,10 +3,12 @@ package yegor.cheprasov.fluentflow.decompose.exercise
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.slot.ChildSlot
 import com.arkivanov.decompose.router.slot.SlotNavigation
+import com.arkivanov.decompose.router.slot.activate
 import com.arkivanov.decompose.router.slot.childSlot
 import com.arkivanov.decompose.router.slot.dismiss
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
+import com.arkivanov.decompose.value.update
 import com.arkivanov.essenty.parcelable.Parcelable
 import kotlinx.android.parcel.Parcelize
 import kotlinx.coroutines.flow.first
@@ -18,6 +20,8 @@ import yegor.cheprasov.fluentflow.decompose.BaseComponent
 import yegor.cheprasov.fluentflow.decompose.dialog.DialogComponent
 import yegor.cheprasov.fluentflow.decompose.dialog.RealErrorLearningWordsDialogComponent
 import yegor.cheprasov.fluentflow.decompose.dialog.SuccessDialog
+import yegor.cheprasov.fluentflow.ui.compose.exerciseScreen.ExerciseSelectState
+import yegor.cheprasov.fluentflow.ui.compose.exerciseScreen.SelectWordViewEntity
 import yegor.cheprasov.fluentflow.ui.compose.exerciseScreen.state.ExerciseState
 
 class RealExerciseComponent(
@@ -58,7 +62,9 @@ class RealExerciseComponent(
         }
     }
 
-    override val uiState: Value<ExerciseState> = MutableValue(ExerciseState.Loading)
+    private val _uiState: MutableValue<ExerciseState> = MutableValue(ExerciseState.Loading)
+
+    override val uiState: Value<ExerciseState> = _uiState
 
     override val dialogState: Value<ChildSlot<*, DialogComponent>> = _dialog
 
@@ -69,9 +75,17 @@ class RealExerciseComponent(
 
     override fun event(event: ExerciseComponent.Event) {
         when (event) {
-            is ExerciseComponent.Event.Check -> check(event.list)
+            ExerciseComponent.Event.Check -> {
+                if (uiState.value is ExerciseState.CurrentExercise) {
+                    with(uiState.value as ExerciseState.CurrentExercise) {
+                        check(list = exercise.selectWords.map { it.text }, sentence = sentense)
+                    }
+                }
+            }
             ExerciseComponent.Event.GoToNext -> goToNext()
             ExerciseComponent.Event.Close -> _onClose()
+            is ExerciseComponent.Event.SelectWord -> selectWord(event.wordViewEntity)
+            is ExerciseComponent.Event.RemoveWord -> removeWord(event.wordViewEntity)
         }
     }
 
@@ -79,7 +93,54 @@ class RealExerciseComponent(
         exerciseUseCase.load()
     }
 
-    private fun check(list: List<String>) {
+    private fun selectWord(wordViewEntity: SelectWordViewEntity) {
+        _uiState.update { state ->
+            if (state is ExerciseState.CurrentExercise) {
+                val selectedWords = arrayListOf<SelectWordViewEntity>().also {
+                    it.addAll(state.exercise.selectWords)
+                }
+                selectedWords.add(wordViewEntity)
+                state.copy(
+                    exercise = state.exercise.copy(
+                        selectWords = selectedWords,
+                        allWords = state.exercise.allWords.map {
+                            it.copy(isSelected = selectedWords.map { it.text }.contains(it.text))
+                        })
+                )
+            } else {
+                state
+            }
+        }
+    }
+
+//    private fun<T: Any> MutableValue<T>.compareTypeAndUpdate(expected: KClass<T>, newValue: (T) -> T) {
+//        if (this.value::class == expected) {
+//            update {
+//                newValue(it)
+//            }
+//        }
+//    }
+
+    private fun removeWord(word: SelectWordViewEntity) {
+        _uiState.update { state ->
+            if (state is ExerciseState.CurrentExercise) {
+                val newSelectedWords = arrayListOf<SelectWordViewEntity>().also {
+                    it.addAll(state.exercise.selectWords)
+                    it.remove(word)
+                }
+                state.copy(exercise = state.exercise.copy(
+                    selectWords = newSelectedWords,
+                    allWords = state.exercise.allWords.map {
+                        it.copy(isSelected = newSelectedWords.map { it.text }.contains(it.text))
+                    }
+                ))
+            } else {
+                state
+            }
+        }
+    }
+
+    private fun check(list: List<String>, sentence: String) {
         var result = true
 
         if (currentItem == null) {
@@ -95,6 +156,28 @@ class RealExerciseComponent(
                 }
             }
         }
+
+        if (result) {
+            dialogNavigation.activate(DialogConfig.Success(sentence))
+        } else {
+            dialogNavigation.activate(DialogConfig.Error(
+                sentence,
+                correctSentence = currentItem!!.correctWords.toText(),
+                chooseSentence = list.toText()
+            ))
+        }
+    }
+
+    private fun List<String>.toText(): String {
+        var result = ""
+        forEachIndexed { index, s ->
+            if (index != lastIndex) {
+                result += "$s "
+            } else {
+                result + s
+            }
+        }
+        return result
     }
 
     private fun observeExercise() = scope.launch {
@@ -102,7 +185,9 @@ class RealExerciseComponent(
             .first {
                 list.clear()
                 list.addAll(it)
-                start()
+                if (list.isNotEmpty()) {
+                    start()
+                }
                 true
             }
     }
@@ -110,6 +195,20 @@ class RealExerciseComponent(
     private fun start() {
         currentItem = list.first()
         currentIndex = 0
+        currentItem?.let { entity ->
+            _uiState.update {
+                ExerciseState.CurrentExercise(
+                    sentense = entity.sentense,
+                    correctWords = entity.correctWords,
+                    exercise = ExerciseSelectState(
+                        selectWords = listOf(),
+                        allWords = entity.words.map {
+                            SelectWordViewEntity(it, false)
+                        }
+                    )
+                )
+            }
+        }
     }
 
     private fun goToNext() {

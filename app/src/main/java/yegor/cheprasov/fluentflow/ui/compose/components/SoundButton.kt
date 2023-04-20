@@ -1,5 +1,6 @@
 package yegor.cheprasov.fluentflow.ui.compose.components
 
+import android.content.Context
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -11,6 +12,7 @@ import androidx.compose.material.icons.filled.VolumeUp
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -31,4 +33,15 @@ fun SoundButton(word: String, modifier: Modifier = Modifier) {
             modifier = Modifier.padding(13.dp)
         )
     }
+}
+
+@Composable
+fun rememberTextToSpeech() {
+    val context = LocalContext.current
+}
+
+class AppTextToSpeech(context: Context) {
+
+
+
 }

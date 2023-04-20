@@ -1,8 +1,8 @@
 package yegor.cheprasov.fluentflow.data.entity
 
 data class ExerciseNetworkEntity(
-    val correctWords: List<String>,
-    val sentense: String,
-    val words: List<String>,
-    val level: Int
+    val correctWords: List<String> = listOf(),
+    val sentense: String = "",
+    val words: List<String> = listOf(),
+    val level: Int = 0
 )
