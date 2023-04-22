@@ -9,5 +9,6 @@ class AppFirestore {
     val grammars = db.collection("grammars")
     val words = db.collection("words")
     val exercise = db.collection("exercises")
+    val game = db.collection("game")
 
 }

@@ -82,7 +82,9 @@ class RealParentScreenComponent(
         }
 
     private fun game(componentContext: ComponentContext): GameComponent =
-        RealGameComponent(componentContext)
+        RealGameComponent(componentContext) {
+            navigation.pop()
+        }
 
     private fun words(componentContext: ComponentContext, topic: WordsTopicViewEntity): WordsMainComponent =
         RealWordsMainComponent(componentContext, topic) {
