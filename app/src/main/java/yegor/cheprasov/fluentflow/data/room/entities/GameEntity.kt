@@ -10,7 +10,9 @@ data class GameEntity(
     @PrimaryKey(autoGenerate = true) val _id: Int = 0,
     val gameId: Int,
     val correctWord: String,
+    val translate: String,
     val imgUri: String,
     val level: Int,
-    val words: List<String>
+    val words: List<String>,
+    val isEnded: Boolean
 )
