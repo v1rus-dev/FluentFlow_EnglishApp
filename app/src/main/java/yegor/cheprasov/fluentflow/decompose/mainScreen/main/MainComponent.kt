@@ -1,5 +1,6 @@
 package yegor.cheprasov.fluentflow.decompose.mainScreen.main
 
+import androidx.annotation.DrawableRes
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.arkivanov.decompose.value.Value
 import yegor.cheprasov.fluentflow.decompose.mainScreen.profile.ProfileMainComponent
@@ -31,7 +32,7 @@ interface MainComponent {
 
     data class MenuItem(
         val menuName: String,
-        val menuIcon: ImageVector,
+        @DrawableRes val menuIcon: Int,
         val id: Int
     )
 }

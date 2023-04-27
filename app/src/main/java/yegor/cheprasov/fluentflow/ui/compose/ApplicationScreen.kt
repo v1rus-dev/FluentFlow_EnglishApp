@@ -11,6 +11,7 @@ import yegor.cheprasov.fluentflow.ui.compose.exerciseScreen.ExerciseScreen
 import yegor.cheprasov.fluentflow.ui.compose.gameScreen.GameScreen
 import yegor.cheprasov.fluentflow.ui.compose.grammarThemesScreen.GrammarMainScreen
 import yegor.cheprasov.fluentflow.ui.compose.mainScreen.MainScreen
+import yegor.cheprasov.fluentflow.ui.compose.onboarding.OnboardingScreen
 import yegor.cheprasov.fluentflow.ui.compose.wordsScreen.WordsScreen
 
 @Composable
@@ -26,6 +27,7 @@ fun ApplicationScreen(
             is ParentScreenComponent.Child.Game -> GameScreen(component = instance.component)
             is ParentScreenComponent.Child.GrammarThemes -> GrammarMainScreen(component = instance.component)
             is ParentScreenComponent.Child.Words -> WordsScreen(component = instance.component)
+            is ParentScreenComponent.Child.OnBoarding -> OnboardingScreen(component = instance.component)
         }
     }
 }

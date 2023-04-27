@@ -12,5 +12,6 @@ data class GrammarEntity(
     val subtitle: String,
     val fileName: String,
     val exerciseFile: String,
+    val level: Int,
     val examples: List<String>
 )

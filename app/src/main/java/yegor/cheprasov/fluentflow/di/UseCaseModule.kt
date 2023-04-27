@@ -1,5 +1,6 @@
 package yegor.cheprasov.fluentflow.di
 
+import org.koin.android.ext.koin.androidContext
 import org.koin.dsl.module
 import yegor.cheprasov.fluentflow.data.usecase.GameUseCase
 import yegor.cheprasov.fluentflow.data.usecase.GrammarUseCase
@@ -14,5 +15,5 @@ val useCaseModule = module {
     single { RandomWords(get()) }
     single { MainExerciseUseCase(get(), get()) }
     single { GameUseCase(get(), get()) }
-    single { LevelUseCase() }
+    single { LevelUseCase(androidContext()) }
 }

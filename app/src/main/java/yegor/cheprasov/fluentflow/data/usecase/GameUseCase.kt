@@ -1,5 +1,6 @@
 package yegor.cheprasov.fluentflow.data.usecase
 
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import yegor.cheprasov.fluentflow.data.repositories.GameRepository
@@ -26,13 +27,15 @@ class GameUseCase(
         gameRepository.saveGameAsEnded(gameId)
     }
 
-    private suspend fun getForMixedMode(): List<GameEntity> =
-        gameRepository.getByLevel(levelUseCase.getCurrentLevel()).shuffled().take(10)
+    private suspend fun getForMixedMode(): List<GameEntity> {
+        Log.d("myTag", "Q: ${levelUseCase.getCurrentLevelIndex()}")
+        return gameRepository.getByLevel(levelUseCase.getCurrentLevelIndex()).shuffled().take(10)
+    }
 
     private suspend fun getForEndedMode(): List<GameEntity> =
-        gameRepository.getByLevel(levelUseCase.getCurrentLevel()).filter { it.isEnded }.take(10)
+        gameRepository.getByLevel(levelUseCase.getCurrentLevelIndex()).filter { it.isEnded }.take(10)
 
     private suspend fun getForNewMode(): List<GameEntity> =
-        gameRepository.getByLevel(levelUseCase.getCurrentLevel()).filter { !it.isEnded }.take(10)
+        gameRepository.getByLevel(levelUseCase.getCurrentLevelIndex()).filter { !it.isEnded }.take(10)
 
 }

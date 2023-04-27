@@ -5,5 +5,6 @@ data class GrammarNetworkEntity(
     val subtitle: String = "",
     val fileName: String = "",
     val exerciseFile: String = "",
+    val level: Int = 0,
     val examples: List<String> = listOf()
 )

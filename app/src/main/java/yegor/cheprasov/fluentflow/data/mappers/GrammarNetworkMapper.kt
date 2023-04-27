@@ -10,6 +10,7 @@ class GrammarNetworkMapper {
             subtitle = value.subtitle,
             fileName = value.fileName,
             exerciseFile = value.exerciseFile,
+            level = value.level,
             examples = value.examples
         )
 }

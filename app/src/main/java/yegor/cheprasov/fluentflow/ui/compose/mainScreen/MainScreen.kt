@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
@@ -13,7 +14,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import yegor.cheprasov.fluentflow.decompose.mainScreen.main.FakeMainComponent
 import yegor.cheprasov.fluentflow.decompose.mainScreen.main.MainComponent
@@ -29,7 +32,7 @@ fun MainScreen(component: MainComponent) {
     }
 
     Scaffold(modifier = Modifier.fillMaxSize(), bottomBar = {
-        BottomNavigation {
+        BottomNavigation(backgroundColor = Color.White) {
             bottomNavItems.forEach { item ->
                 BottomNavigationItem(
                     selected = item == selectedItem.value,
@@ -41,7 +44,11 @@ fun MainScreen(component: MainComponent) {
                         }
                     },
                     icon = {
-                        Icon(imageVector = item.menuIcon, contentDescription = null)
+                        Icon(
+                            painter = painterResource(id = item.menuIcon),
+                            contentDescription = null,
+                            modifier = Modifier.size(24.dp)
+                        )
                     },
                     label = {
                         Text(text = item.menuName)

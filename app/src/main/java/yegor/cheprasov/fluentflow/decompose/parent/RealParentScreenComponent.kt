@@ -9,6 +9,8 @@ import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.parcelable.Parcelable
 import com.arkivanov.essenty.parcelable.Parcelize
+import org.koin.core.component.inject
+import yegor.cheprasov.fluentflow.data.usecase.LevelUseCase
 import yegor.cheprasov.fluentflow.decompose.BaseComponent
 import yegor.cheprasov.fluentflow.decompose.exercise.ExerciseComponent
 import yegor.cheprasov.fluentflow.decompose.exercise.RealExerciseComponent
@@ -18,6 +20,8 @@ import yegor.cheprasov.fluentflow.decompose.grammarThemes.main.GrammarMainScreen
 import yegor.cheprasov.fluentflow.decompose.grammarThemes.main.RealGrammarMainScreen
 import yegor.cheprasov.fluentflow.decompose.mainScreen.main.MainComponent
 import yegor.cheprasov.fluentflow.decompose.mainScreen.main.RealMainComponent
+import yegor.cheprasov.fluentflow.decompose.onboarding.OnBoardingComponent
+import yegor.cheprasov.fluentflow.decompose.onboarding.RealOnboardingComponent
 import yegor.cheprasov.fluentflow.decompose.words.main.RealWordsMainComponent
 import yegor.cheprasov.fluentflow.decompose.words.main.WordsMainComponent
 import yegor.cheprasov.fluentflow.ui.compose.mainScreen.screens.words.WordsTopicViewEntity
@@ -26,11 +30,17 @@ class RealParentScreenComponent(
     componentContext: ComponentContext
 ) : BaseComponent(componentContext), ParentScreenComponent {
 
+    private val levelUseCase: LevelUseCase by inject()
+
     private val navigation = StackNavigation<ParentConfiguration>()
 
     private val _childStack = childStack(
         source = navigation,
-        initialConfiguration = ParentConfiguration.Main,
+        initialConfiguration = if (levelUseCase.getCurrentLevelIndex() == -1) {
+            ParentConfiguration.OnBoarding
+        } else {
+            ParentConfiguration.Main
+        },
         handleBackButton = true,
         childFactory = ::createChild
     )
@@ -46,25 +56,42 @@ class RealParentScreenComponent(
                     componentContext
                 )
             )
+
             ParentConfiguration.Game -> ParentScreenComponent.Child.Game(game(componentContext))
             ParentConfiguration.GrammarThemes -> ParentScreenComponent.Child.GrammarThemes(
                 grammarThemes(componentContext)
             )
-            is ParentConfiguration.Words -> ParentScreenComponent.Child.Words(words(componentContext, config.topic))
+
+            is ParentConfiguration.Words -> ParentScreenComponent.Child.Words(
+                words(
+                    componentContext,
+                    config.topic
+                )
+            )
+
+            ParentConfiguration.OnBoarding -> ParentScreenComponent.Child.OnBoarding(onboarding(componentContext))
+        }
+
+    private fun onboarding(componentContext: ComponentContext): OnBoardingComponent =
+        RealOnboardingComponent(componentContext) {
+            navigation.push(ParentConfiguration.Main)
         }
 
     private fun main(componentContext: ComponentContext): MainComponent =
         RealMainComponent(componentContext) {
-            when(it) {
+            when (it) {
                 MainComponent.Event.OpenExercises -> {
                     navigation.push(ParentConfiguration.Exercises)
                 }
+
                 MainComponent.Event.OpenGames -> {
                     navigation.push(ParentConfiguration.Game)
                 }
+
                 MainComponent.Event.OpenGrammars -> {
                     navigation.push(ParentConfiguration.GrammarThemes)
                 }
+
                 is MainComponent.Event.OpenTopicWords -> {
                     navigation.push(ParentConfiguration.Words(it.topic))
                 }
@@ -86,7 +113,10 @@ class RealParentScreenComponent(
             navigation.pop()
         }
 
-    private fun words(componentContext: ComponentContext, topic: WordsTopicViewEntity): WordsMainComponent =
+    private fun words(
+        componentContext: ComponentContext,
+        topic: WordsTopicViewEntity
+    ): WordsMainComponent =
         RealWordsMainComponent(componentContext, topic) {
             navigation.pop()
         }
@@ -104,6 +134,9 @@ class RealParentScreenComponent(
 
         @Parcelize
         object Game : ParentConfiguration()
+
+        @Parcelize
+        object OnBoarding : ParentConfiguration()
 
         @Parcelize
         data class Words(val topic: WordsTopicViewEntity) : ParentConfiguration()

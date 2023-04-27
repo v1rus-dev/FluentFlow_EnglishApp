@@ -7,7 +7,8 @@ import yegor.cheprasov.fluentflow.decompose.BaseComponent
 class RealSelectModComponent(
     componentContext: ComponentContext,
     private val value: Value<Boolean>,
-    private val _event: (SelectModComponent.Event) -> Unit
+    private val _event: (SelectModComponent.Event) -> Unit,
+    private val _close: () -> Unit
 ) : BaseComponent(componentContext), SelectModComponent {
 
     private var isCanOpen: Boolean = false
@@ -24,6 +25,11 @@ class RealSelectModComponent(
         value.subscribe {
             isCanOpen = true
         }
+    }
+
+    override fun onBack() {
+        super.onBack()
+        _close()
     }
 
 }

@@ -65,14 +65,6 @@ fun SelectModeScreen(selectModComponent: SelectModComponent) {
                 .padding(it)
                 .padding(horizontal = 16.dp)
         ) {
-
-            Text(
-                text = "Выберите режим игры",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(top = 8.dp)
-            )
-
             LazyColumn(
                 modifier = Modifier.fillMaxWidth(),
                 contentPadding = PaddingValues(vertical = 16.dp)

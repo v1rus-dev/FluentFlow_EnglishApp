@@ -1,5 +1,6 @@
 package yegor.cheprasov.fluentflow.decompose.game.game
 
+import android.util.Log
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
@@ -57,8 +58,11 @@ class RealPlayInGameComponent(
     private fun getListForMode() = scope.launch {
         val list = gameUseCase.getListByMode(gameMode)
 
+        Log.d("myTag", "list: $list")
         if (list.isEmpty()) {
-            _onBack()
+            scope.launch(Dispatchers.Main) {
+                _onBack()
+            }
             return@launch
         }
 
@@ -119,7 +123,7 @@ class RealPlayInGameComponent(
 
         if (currentGame != gameList.last()) {
             scope.launch(Dispatchers.IO) {
-                delay(700L)
+                delay(300L)
                 next()
             }
         } else {

@@ -115,6 +115,9 @@ class RealGameComponent(
 
                     SelectModComponent.Event.OnBack -> _onExit()
                 }
+            },
+            _close = {
+                _onExit()
             }
         )
 

@@ -7,6 +7,7 @@ import androidx.compose.material.icons.outlined.Person
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.update
+import yegor.cheprasov.fluentflow.R
 import yegor.cheprasov.fluentflow.decompose.mainScreen.profile.FakeProfileComponent
 import yegor.cheprasov.fluentflow.decompose.mainScreen.profile.ProfileMainComponent
 import yegor.cheprasov.fluentflow.decompose.mainScreen.themes.FakeThemesMainComponent
@@ -31,8 +32,8 @@ class FakeMainComponent : MainComponent {
 
     override val bottomNavItems: List<MainComponent.MenuItem>
         get() = listOf(
-            MainComponent.MenuItem(menuName = "Темы", menuIcon = Icons.Outlined.AssignmentInd, 0),
-            MainComponent.MenuItem(menuName = "Слова", menuIcon = Icons.Outlined.Comment, 1),
-            MainComponent.MenuItem(menuName = "Профиль", menuIcon = Icons.Outlined.Person, 2)
+            MainComponent.MenuItem(menuName = "Темы", menuIcon = R.drawable.ic_plan, 0),
+            MainComponent.MenuItem(menuName = "Слова", menuIcon = R.drawable.ic_words, 1),
+            MainComponent.MenuItem(menuName = "Профиль", menuIcon = R.drawable.ic_profile, 2)
         )
 }
