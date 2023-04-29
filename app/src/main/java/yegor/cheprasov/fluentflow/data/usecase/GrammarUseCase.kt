@@ -1,5 +1,6 @@
 package yegor.cheprasov.fluentflow.data.usecase
 
+import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import yegor.cheprasov.fluentflow.data.entity.GrammarDetailNetworkEntity
 import yegor.cheprasov.fluentflow.data.repositories.GrammarRepository
@@ -16,6 +17,8 @@ class GrammarUseCase(
     fun loadGrammarFromFile(fileName: String): Flow<GrammarDetailNetworkEntity> =
         grammarRepository.loadGrammarFromFile(fileName)
 
-    fun loadExerciseFromFile(fileName: String) = grammarRepository.loadExercise(fileName)
+    suspend fun getExercisesByGrammarId(grammarId: Int) = grammarRepository.getExercisesByGrammarId(grammarId)
+
+    suspend fun setExerciseLikeEnded(id: Int, grammarId: Int) = grammarRepository.setExerciseLikeEnded(id, grammarId)
 
 }

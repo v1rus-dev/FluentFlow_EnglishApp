@@ -6,6 +6,7 @@ import androidx.room.Query
 import kotlinx.coroutines.flow.Flow
 import yegor.cheprasov.fluentflow.data.room.entities.GRAMMAR_TABLE
 import yegor.cheprasov.fluentflow.data.room.entities.GrammarEntity
+import yegor.cheprasov.fluentflow.data.room.entities.GrammarExerciseEntity
 
 @Dao
 interface GrammarDao {
@@ -18,4 +19,12 @@ interface GrammarDao {
 
     @Query("SELECT * FROM $GRAMMAR_TABLE")
     fun observeAll(): Flow<List<GrammarEntity>>
+    @Query("UPDATE $GRAMMAR_TABLE SET allExercises = :exerciseSize WHERE fileName = :fileName")
+    suspend fun updateSizeOfExercises(fileName: String, exerciseSize: Int)
+
+    @Query("SELECT * FROM $GRAMMAR_TABLE WHERE grammarId = :grammarId")
+    fun getByGrammarId(grammarId: Int): GrammarEntity
+
+    @Query("UPDATE $GRAMMAR_TABLE SET endedExercises = :endedSize WHERE grammarId = :grammarId")
+    suspend fun updateEndedSize(grammarId: Int, endedSize: Int)
 }

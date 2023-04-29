@@ -1,7 +1,8 @@
 package yegor.cheprasov.fluentflow.ui.compose.grammarThemesScreen.allThemes
 
+import android.util.Log
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,16 +18,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ExposedDropdownMenuBox
-import androidx.compose.material.ExposedDropdownMenuDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,15 +39,18 @@ import androidx.compose.ui.unit.sp
 import com.arkivanov.decompose.extensions.compose.jetpack.subscribeAsState
 import yegor.cheprasov.fluentflow.R
 import yegor.cheprasov.fluentflow.data.usecase.Level
+import yegor.cheprasov.fluentflow.data.utils.map
 import yegor.cheprasov.fluentflow.decompose.grammarThemes.FakeGrammarThemesComponent
 import yegor.cheprasov.fluentflow.decompose.grammarThemes.GrammarThemesComponent
-import yegor.cheprasov.fluentflow.ui.compose.components.SecondToolbar
 import yegor.cheprasov.fluentflow.ui.compose.grammarThemesScreen.allThemes.components.GrammarElement
 import yegor.cheprasov.fluentflow.ui.compose.grammarThemesScreen.viewEntity.GrammarElementViewEntity
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun GrammarThemesScreen(component: GrammarThemesComponent) {
     val uiState = component.uiState.subscribeAsState()
+
+    Log.d("myTag", "uiState: ${uiState.value.map { it.grammars }}")
 
     var isExpanded by remember {
         mutableStateOf(false)
@@ -90,7 +89,11 @@ fun GrammarThemesScreen(component: GrammarThemesComponent) {
                 Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.clickable {
                     isExpanded = !isExpanded
                 }) {
-                    Text(text = uiState.value.currentLevel.levelName, fontSize = 16.sp, color = Color.LightGray)
+                    Text(
+                        text = uiState.value.currentLevel.levelName,
+                        fontSize = 16.sp,
+                        color = Color.LightGray
+                    )
                     Icon(
                         imageVector = Icons.Filled.ArrowDropDown,
                         contentDescription = null,
@@ -121,12 +124,18 @@ fun GrammarThemesScreen(component: GrammarThemesComponent) {
                         element = GrammarElementViewEntity(
                             title = item.title,
                             subtitle = item.subtitle,
+                            grammarId = item.grammarId,
                             examples = item.examples,
                             fileName = item.fileName,
                             exerciseFile = item.exerciseFile,
-                            percentage = 0,
-                            isFavorite = false
-                        )
+                            allExercises = item.allExercises,
+                            endedExercises = item.endedExercises,
+                            isFavorite = item.isFavorite
+                        ),
+                        modifier = Modifier.animateItemPlacement(),
+                        makeFavorite = {
+                            component.event(GrammarThemesComponent.Event.MakeFavorite(it))
+                        }
                     ) {
                         component.event(GrammarThemesComponent.Event.ClickOnTheme(it))
                     }

@@ -51,7 +51,7 @@ class RealGrammarMainScreen(componentContext: ComponentContext, private val _onB
             is Config.Exercise -> GrammarMainScreen.Child.Exercise(
                 component = exercise(
                     componentContext,
-                    config.fileName
+                    config.grammarId
                 )
             )
         }
@@ -73,9 +73,9 @@ class RealGrammarMainScreen(componentContext: ComponentContext, private val _onB
 
     private fun exercise(
         componentContext: ComponentContext,
-        fileName: String
+        grammarId: Int
     ): GrammarExerciseComponent =
-        RealGrammarExerciseComponent(componentContext, fileName, _onBack = {
+        RealGrammarExerciseComponent(componentContext, grammarId, _onBack = {
             navigation.pop()
         })
 
@@ -88,7 +88,7 @@ class RealGrammarMainScreen(componentContext: ComponentContext, private val _onB
         data class Details(val entity: GrammarElementViewEntity) : Config
 
         @Parcelize
-        data class Exercise(val fileName: String) : Config
+        data class Exercise(val grammarId: Int) : Config
     }
 
     override val childStack: Value<ChildStack<*, GrammarMainScreen.Child>> = _childStack

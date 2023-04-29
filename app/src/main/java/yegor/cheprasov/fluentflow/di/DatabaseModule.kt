@@ -21,4 +21,6 @@ val databaseModule = module {
     factory { get<AppDatabase>().getExerciseDao() }
 
     factory { get<AppDatabase>().getGameDao() }
+
+    factory { get<AppDatabase>().getGrammarExerciseDao() }
 }

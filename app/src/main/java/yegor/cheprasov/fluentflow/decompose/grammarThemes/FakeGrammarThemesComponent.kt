@@ -13,50 +13,68 @@ class FakeGrammarThemesComponent : GrammarThemesComponent {
                 grammars = listOf(
                     GrammarEntity(
                         title = "Title",
+                        grammarId = 0,
                         subtitle = "Subtitle",
                         fileName = "",
                         exerciseFile = "",
                         level = 0,
+                        allExercises = 0,
+                        endedExercises = 0,
                         examples = listOf("Am", "is", "are")
                     ),
                     GrammarEntity(
                         title = "Title",
+                        grammarId = 0,
                         subtitle = "Subtitle",
                         fileName = "",
                         exerciseFile = "",
                         level = 0,
+                        allExercises = 0,
+                        endedExercises = 0,
                         examples = listOf("Am", "is", "are")
                     ),
                     GrammarEntity(
                         title = "Title",
+                        grammarId = 0,
                         subtitle = "Subtitle",
                         fileName = "",
                         exerciseFile = "",
                         level = 0,
+                        allExercises = 0,
+                        endedExercises = 0,
                         examples = listOf("Am", "is", "are")
                     ),
                     GrammarEntity(
                         title = "Title",
+                        grammarId = 0,
                         subtitle = "Subtitle",
                         fileName = "",
                         exerciseFile = "",
                         level = 0,
+                        allExercises = 0,
+                        endedExercises = 0,
                         examples = listOf("Am", "is", "are")
                     ),
                     GrammarEntity(
                         title = "Title",
+                        grammarId = 0,
                         subtitle = "Subtitle",
                         fileName = "",
                         exerciseFile = "",
                         level = 0,
+                        allExercises = 0,
+                        endedExercises = 0,
                         examples = listOf("Am", "is", "are")
                     ),
                     GrammarEntity(
                         title = "Title",
+                        grammarId = 0,
                         subtitle = "Subtitle",
                         fileName = "",
                         exerciseFile = "",
                         level = 0,
+                        allExercises = 0,
+                        endedExercises = 0,
                         examples = listOf("Am", "is", "are")
                     )
                 )

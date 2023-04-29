@@ -4,8 +4,7 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.decompose.value.update
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -23,7 +22,7 @@ class RealGrammarThemesComponent(
     private val _onBack: () -> Unit
 ) : BaseComponent(componentContext), GrammarThemesComponent {
 
-    private val mutableLevel = MutableSharedFlow<Level>()
+    private val newGetting = MutableStateFlow(0)
 
     private val grammarRepository: GrammarUseCase by inject()
     private val levelUseCase: LevelUseCase by inject()
@@ -32,11 +31,7 @@ class RealGrammarThemesComponent(
             currentLevel = levelUseCase.getCurrentLevel(),
             grammars = listOf()
         )
-    ).also {
-        scope.launch {
-            mutableLevel.emit(levelUseCase.getCurrentLevel())
-        }
-    }
+    )
 
     init {
         loadGrammars()
@@ -51,6 +46,9 @@ class RealGrammarThemesComponent(
             }
 
             is GrammarThemesComponent.Event.SelectNewLevel -> selectNewLevel(event.level)
+            is GrammarThemesComponent.Event.MakeFavorite -> {
+
+            }
         }
     }
 
@@ -65,11 +63,14 @@ class RealGrammarThemesComponent(
     private fun observeGrammars() {
         scope.launch(dispatcherIO) {
             grammarRepository.observeGrammars()
-                .combine(mutableLevel, transform = { list, level ->
+                .combine(newGetting, transform = { list, _ ->
                     list
                 })
-                .map { it.filter { it.level == uiState.value.currentLevel.id } }
-                .collectLatest { list ->
+                .map {
+                    it.filter { it.level == levelUseCase.getCurrentLevel().id }
+                        .sortedBy { it.isFavorite }
+                }
+                .collect { list ->
                     _uiState.reduceMain { it.copy(grammars = list) }
                 }
         }
@@ -79,7 +80,7 @@ class RealGrammarThemesComponent(
         levelUseCase.setLevel(level)
         _uiState.update { it.copy(currentLevel = level) }
         scope.launch {
-            mutableLevel.emit(level)
+            newGetting.emit(newGetting.value + 1)
         }
     }
 

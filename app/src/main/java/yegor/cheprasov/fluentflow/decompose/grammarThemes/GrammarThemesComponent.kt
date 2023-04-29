@@ -15,5 +15,7 @@ interface GrammarThemesComponent {
 
         data class SelectNewLevel(val level: Level) : Event
         data class ClickOnTheme(val value: GrammarElementViewEntity) : Event
+
+        data class MakeFavorite(val value: GrammarElementViewEntity) : Event
     }
 }

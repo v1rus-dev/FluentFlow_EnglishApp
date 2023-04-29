@@ -1,5 +1,6 @@
 package yegor.cheprasov.fluentflow.ui.compose.grammarThemesScreen.allThemes.components
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
@@ -35,9 +36,9 @@ private val titleTextColor = Color(0xFFC5C6C7)
 fun GrammarMenuCard(
     element: GrammarElementViewEntity,
     modifier: Modifier = Modifier,
+    makeFavorite: (GrammarElementViewEntity) -> Unit,
     onClick: (GrammarElementViewEntity) -> Unit
 ) {
-    val context = LocalContext.current
     Card(
         onClick = { onClick(element) },
         modifier = modifier
@@ -79,10 +80,15 @@ fun GrammarMenuCard(
                     isFavorite = element.isFavorite,
                     modifier = Modifier.size(24.dp)
                 ) {
-                    Toast.makeText(context, "Tap on favorite", Toast.LENGTH_SHORT).show()
+                    makeFavorite(element)
                 }
+                Log.d("myTag", "element: $element")
                 Percentage(
-                    percentage = element.percentage,
+                    percentage = if (element.endedExercises > 0 && element.allExercises > 0) {
+                        (element.endedExercises.toFloat() / element.allExercises.toFloat()) * 100f
+                    } else {
+                        0f
+                    },
                     modifier = Modifier
                         .width(80.dp)
                         .padding(top = 32.dp)
@@ -100,10 +106,13 @@ private fun PreviewGrammarMenuCard() {
             title = "Am, is, are",
             subtitle = "Present Simple",
             examples = listOf("This is", "It is"),
-            percentage = 35,
+            allExercises = 3,
+            endedExercises = 1,
             isFavorite = false,
             fileName = "",
+            grammarId = 0,
             exerciseFile = ""
-        )
+        ),
+        makeFavorite = {}
     ) {}
 }

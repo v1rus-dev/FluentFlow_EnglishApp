@@ -8,5 +8,6 @@ data class GrammarExerciseViewEntity(
     val text: List<String>,
     val words: List<String>,
     val correctWords: List<String>,
-    val correctPhrase: String
+    val correctPhrase: String,
+    val id: Int
 )

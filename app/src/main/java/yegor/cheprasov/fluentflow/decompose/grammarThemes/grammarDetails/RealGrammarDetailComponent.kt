@@ -15,7 +15,7 @@ import yegor.cheprasov.fluentflow.utils.reduceMain
 class RealGrammarDetailComponent(
     componentContext: ComponentContext,
     private val element: GrammarElementViewEntity,
-    private val _openExercise: (String) -> Unit,
+    private val _openExercise: (Int) -> Unit,
     private val _onBack: () -> Unit
 ) : BaseComponent(componentContext), GrammarDetailsComponent {
 
@@ -33,7 +33,7 @@ class RealGrammarDetailComponent(
     override fun event(event: GrammarDetailsComponent.Event) {
         when (event) {
             GrammarDetailsComponent.Event.OnBack -> _onBack()
-            GrammarDetailsComponent.Event.OpenExercise -> _openExercise(element.exerciseFile)
+            GrammarDetailsComponent.Event.OpenExercise -> _openExercise(element.grammarId)
         }
     }
 

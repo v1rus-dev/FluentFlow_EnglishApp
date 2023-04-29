@@ -122,7 +122,7 @@ fun SelectWords(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Percentage(
-            percentage = percentage * 100,
+            percentage = percentage * 100f,
             modifier = Modifier
                 .width(200.dp)
                 .padding(top = 16.dp)

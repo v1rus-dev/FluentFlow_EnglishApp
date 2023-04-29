@@ -18,12 +18,10 @@ val PERCENTAGE_COLOR_SECOND = Color(0xFFE5E5E5)
 
 @Composable
 fun Percentage(
-    percentage: Int,
+    percentage: Float,
     modifier: Modifier = Modifier
 ) {
-    val percentageValue by remember {
-        mutableStateOf((percentage * 0.01).toFloat())
-    }
+    val percentageValue = percentage * 0.01f
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -50,5 +48,5 @@ fun Percentage(
 @Preview(name = "ThemItemPercentage")
 @Composable
 private fun PreviewPercentage() {
-    Percentage(76)
+    Percentage(76f)
 }

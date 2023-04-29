@@ -67,9 +67,9 @@ fun TopicListItem(item: WordsTopicViewEntity, onClick: (WordsTopicViewEntity) ->
                 }
             }
             if (item.endedCount != 0) {
-                Percentage(percentage = item.allCount / item.endedCount)
+                Percentage(percentage = item.allCount / item.endedCount.toFloat())
             } else {
-                Percentage(percentage = 0)
+                Percentage(percentage = 0f)
             }
         }
     }

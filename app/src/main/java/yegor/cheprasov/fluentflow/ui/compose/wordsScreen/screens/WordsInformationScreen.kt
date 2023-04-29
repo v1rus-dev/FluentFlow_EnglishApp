@@ -88,9 +88,9 @@ fun WordsInformationScreen(component: WordsInformationComponent) {
                         .padding(top = 24.dp)
                 ) {
                     if (uiState.endedCount != 0) {
-                        Percentage(percentage = uiState.allCount / uiState.endedCount)
+                        Percentage(percentage = uiState.allCount / uiState.endedCount.toFloat())
                     } else {
-                        Percentage(percentage = 0)
+                        Percentage(percentage = 0f)
                     }
                 }
 

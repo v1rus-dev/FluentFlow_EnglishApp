@@ -7,11 +7,13 @@ import yegor.cheprasov.fluentflow.data.room.converters.StringListConverter
 import yegor.cheprasov.fluentflow.data.room.dao.ExerciseDao
 import yegor.cheprasov.fluentflow.data.room.dao.GameDao
 import yegor.cheprasov.fluentflow.data.room.dao.GrammarDao
+import yegor.cheprasov.fluentflow.data.room.dao.GrammarExerciseDao
 import yegor.cheprasov.fluentflow.data.room.dao.WordsDao
 import yegor.cheprasov.fluentflow.data.room.dao.WordsTopicDao
 import yegor.cheprasov.fluentflow.data.room.entities.ExerciseEntity
 import yegor.cheprasov.fluentflow.data.room.entities.GameEntity
 import yegor.cheprasov.fluentflow.data.room.entities.GrammarEntity
+import yegor.cheprasov.fluentflow.data.room.entities.GrammarExerciseEntity
 import yegor.cheprasov.fluentflow.data.room.entities.WordsEntity
 import yegor.cheprasov.fluentflow.data.room.entities.WordsTopicEntity
 
@@ -21,7 +23,8 @@ import yegor.cheprasov.fluentflow.data.room.entities.WordsTopicEntity
         GrammarEntity::class,
         WordsEntity::class,
         ExerciseEntity::class,
-        GameEntity::class
+        GameEntity::class,
+        GrammarExerciseEntity::class
     ],
     version = 1
 )
@@ -37,4 +40,6 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun getExerciseDao(): ExerciseDao
 
     abstract fun getGameDao(): GameDao
+
+    abstract fun getGrammarExerciseDao(): GrammarExerciseDao
 }

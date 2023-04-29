@@ -85,7 +85,7 @@ fun ThemeItem(
                     fontWeight = FontWeight.Light
                 )
                 Percentage(
-                    percentage = percentage,
+                    percentage = percentage.toFloat(),
                     modifier = Modifier
                         .width(134.dp)
                         .padding(top = 11.dp)

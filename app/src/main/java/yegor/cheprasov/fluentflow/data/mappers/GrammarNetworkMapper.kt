@@ -11,6 +11,9 @@ class GrammarNetworkMapper {
             fileName = value.fileName,
             exerciseFile = value.exerciseFile,
             level = value.level,
-            examples = value.examples
+            allExercises = 0,
+            endedExercises = 0,
+            examples = value.examples,
+            grammarId = value.grammarId
         )
 }
