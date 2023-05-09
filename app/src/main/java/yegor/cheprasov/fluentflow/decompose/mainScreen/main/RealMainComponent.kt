@@ -1,9 +1,5 @@
 package yegor.cheprasov.fluentflow.decompose.mainScreen.main
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.AssignmentInd
-import androidx.compose.material.icons.outlined.Comment
-import androidx.compose.material.icons.outlined.Person
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.childContext
 import com.arkivanov.decompose.value.MutableValue

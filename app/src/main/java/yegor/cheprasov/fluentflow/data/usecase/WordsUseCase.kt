@@ -14,6 +14,9 @@ class WordsUseCase(private val wordsRepository: WordsRepository) {
 
     fun observeTopics() = wordsRepository.observeAllWordTopics()
 
+    suspend fun getAllWordsForByTopic(topicId: Int): List<WordsEntity> =
+        wordsRepository.getAllByTopicId(topicId)
+
     suspend fun getWordsForLearningByTopic(topicId: Int): List<WordsEntity> = withContext(Dispatchers.IO) {
         wordsRepository.getAllByTopicId(topicId).filter { !it.isLearned }.take(15)
     }

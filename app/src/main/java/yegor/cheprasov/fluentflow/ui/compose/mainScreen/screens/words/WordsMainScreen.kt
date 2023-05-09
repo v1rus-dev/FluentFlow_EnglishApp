@@ -1,6 +1,5 @@
 package yegor.cheprasov.fluentflow.ui.compose.mainScreen.screens.words
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -23,7 +22,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,8 +40,6 @@ import yegor.cheprasov.fluentflow.ui.theme.background
 
 @Composable
 fun WordsMainScreen(component: WordsMainComponent) {
-
-    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val state = component.uiState.subscribeAsState()
 
@@ -75,10 +71,10 @@ fun WordsMainScreen(component: WordsMainComponent) {
         ) {
             NewWordsAndPhrasesButton(
                 state = state.value.newWordsAndPhrasesState,
-                modifier = Modifier.padding(start = 16.dp, top = 22.dp)
-            ) {
-                Toast.makeText(context, "111", Toast.LENGTH_SHORT).show()
-            }
+                modifier = Modifier.padding(start = 16.dp, top = 22.dp),
+                showNumbers = false,
+                enable = false
+            ) {}
             Image(
                 painter = painterResource(id = R.drawable.hand_img),
                 contentDescription = null,

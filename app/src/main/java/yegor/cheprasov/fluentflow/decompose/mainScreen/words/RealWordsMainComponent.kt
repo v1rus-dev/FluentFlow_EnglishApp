@@ -3,7 +3,6 @@ package yegor.cheprasov.fluentflow.decompose.mainScreen.words
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.value.MutableValue
 import com.arkivanov.decompose.value.Value
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
@@ -47,7 +46,16 @@ class RealWordsMainComponent(
     private fun observeWords() = scope.launch {
         withContext(dispatcherIO) {
             wordsUseCase.observeTopics()
-                .map { list -> list.map { wordsMapper.mapToViewEntity(it) } }
+                .map { list ->
+                    list.map {
+                        val words = wordsUseCase.getAllWordsForByTopic(it.topicId)
+                        wordsMapper.mapToViewEntity(
+                            it,
+                            words.size,
+                            words.filter { it.isLearned }.size
+                        )
+                    }
+                }
                 .collectLatest { list ->
                     _uiState.reduceMain { it.copy(list = list) }
                 }

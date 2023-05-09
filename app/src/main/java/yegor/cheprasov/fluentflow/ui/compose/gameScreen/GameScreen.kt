@@ -10,7 +10,6 @@ fun GameScreen(component: GameComponent) {
         when(val instance = it.instance) {
             is GameComponent.Child.SelectMod -> SelectModeScreen(selectModComponent = instance.component)
             is GameComponent.Child.PlayInGame -> PlayInGameScreen(playInGameComponent = instance.component)
-            is GameComponent.Child.PreGame -> PreGameScreen(component = instance.component)
             is GameComponent.Child.FinishGame -> FinishGameScreen(component = instance.component)
         }
     }

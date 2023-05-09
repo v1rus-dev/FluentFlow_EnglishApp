@@ -63,8 +63,6 @@ class RealGameComponent(
             )
         )
 
-        is Config.PreGame -> GameComponent.Child.PreGame(preGame(componentContext, config.mode))
-
         is Config.FinishGame -> GameComponent.Child.FinishGame(
             finishGame(
                 componentContext,
@@ -96,19 +94,19 @@ class RealGameComponent(
             _event = { event ->
                 when (event) {
                     SelectModComponent.Event.NewGames -> navigation.push(
-                        Config.PreGame(
+                        Config.PlayInGame(
                             PlayInGameComponent.GameMode.New
                         )
                     )
 
                     SelectModComponent.Event.MixMod -> navigation.push(
-                        Config.PreGame(
+                        Config.PlayInGame(
                             PlayInGameComponent.GameMode.Mix
                         )
                     )
 
                     SelectModComponent.Event.EndedGames -> navigation.push(
-                        Config.PreGame(
+                        Config.PlayInGame(
                             PlayInGameComponent.GameMode.Ended
                         )
                     )
@@ -131,19 +129,8 @@ class RealGameComponent(
             _onContinue = { allWords, selectWords, list ->
                 navigation.push(Config.FinishGame(allWords, selectWords, list))
             }) {
-            navigation.popWhile {
-                it != Config.SelectMode
-            }
+            _onExit()
         }
-
-    private fun preGame(
-        componentContext: ComponentContext,
-        mode: PlayInGameComponent.GameMode
-    ): PreGameComponent =
-        RealPreGameComponent(componentContext, mode) {
-            navigation.push(Config.PlayInGame(mode))
-        }
-
     private fun loadGames() = scope.launch {
         gameUseCase.load()
     }
@@ -160,8 +147,6 @@ class RealGameComponent(
     private sealed class Config : Parcelable {
 
         object SelectMode : Config()
-
-        data class PreGame(val mode: PlayInGameComponent.GameMode) : Config()
 
         data class FinishGame(
             val allWords: Int,

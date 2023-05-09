@@ -26,10 +26,10 @@ class WordsMapper {
             isLearned = false
         )
 
-    fun mapToViewEntity(value: WordsTopicEntity) = WordsTopicViewEntity(
+    fun mapToViewEntity(value: WordsTopicEntity, allCount: Int, endedCount: Int) = WordsTopicViewEntity(
         title = value.title,
-        allCount = 0,
-        endedCount = 0,
+        allCount = allCount,
+        endedCount = endedCount,
         imagePath = Uri.parse(value.imagePath),
         fileName = value.fileName,
         topicId = value.topicId

@@ -9,6 +9,7 @@ import com.arkivanov.decompose.router.stack.push
 import com.arkivanov.decompose.value.Value
 import com.arkivanov.essenty.parcelable.Parcelable
 import com.arkivanov.essenty.parcelable.Parcelize
+import kotlinx.coroutines.launch
 import yegor.cheprasov.fluentflow.decompose.BaseComponent
 import yegor.cheprasov.fluentflow.decompose.words.learn.LearnWordsComponent
 import yegor.cheprasov.fluentflow.decompose.words.learn.RealLearnWordsComponent
@@ -99,7 +100,9 @@ class RealWordsMainComponent(
         list: List<WordsForLearningViewEntity>
     ): LearnWordsComponent =
         RealLearnWordsComponent(componentContext, list, topic.topicId) {
-            _onClose()
+            scope.launch(dispatcherMain) {
+                _onClose()
+            }
         }
 
     private sealed interface Config : Parcelable {

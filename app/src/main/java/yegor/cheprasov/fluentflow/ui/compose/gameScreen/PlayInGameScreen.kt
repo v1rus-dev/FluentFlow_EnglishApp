@@ -21,6 +21,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -53,11 +54,12 @@ import yegor.cheprasov.fluentflow.decompose.game.game.PlayInGameComponent
 fun PlayInGameScreen(
     playInGameComponent: PlayInGameComponent
 ) {
-    val context = LocalContext.current
     val uiState by playInGameComponent.uiState.subscribeAsState()
 
     AnimatedContent(targetState = uiState.currentIndex, label = "") {
-        PlayInGameScreen1(uiState = uiState) {
+        PlayInGameScreen1(uiState = uiState, close = {
+            playInGameComponent.event(PlayInGameComponent.Event.OnBack)
+        }) {
             playInGameComponent.event(PlayInGameComponent.Event.CheckWord(it.word))
         }
     }
@@ -67,6 +69,7 @@ fun PlayInGameScreen(
 @Composable
 fun PlayInGameScreen1(
     uiState: GameState,
+    close: () -> Unit,
     onClick: (GameWord) -> Unit
 ) {
     val context = LocalContext.current
@@ -92,12 +95,13 @@ fun PlayInGameScreen1(
                 .padding(top = 20.dp, start = 22.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                imageVector = Icons.Filled.Close,
-                contentDescription = null,
-                modifier = Modifier.clickable {
+            IconButton(onClick = { close() }) {
+                Icon(
+                    imageVector = Icons.Filled.Close,
+                    contentDescription = null
+                )
+            }
 
-                })
             Text(
                 text = "Выберите значение",
                 fontSize = 20.sp,

@@ -132,15 +132,11 @@ fun CurrentExerciseScreen(
         EnteredWords(
             words = state.exercise.selectWords,
             modifier = Modifier.padding(top = 16.dp)
-        ) { word: SelectWordViewEntity ->
-            removeWord(word)
-        }
+        ) { word: SelectWordViewEntity -> removeWord(word) }
         SelectWordsPart(
             words = state.exercise.allWords,
             modifier = Modifier.padding(top = 16.dp),
-            onSelect = { word ->
-                selectWord(word)
-            }
+            onSelect = { word -> selectWord(word) }
         )
         Column(modifier = Modifier.fillMaxWidth()) {
             Spacer(modifier = Modifier.weight(1f))
@@ -226,6 +222,7 @@ private fun SelectWord(word: SelectWordViewEntity, onClick: (SelectWordViewEntit
         onClick = {
             onClick(word)
         },
+        enabled = !isSelected,
         shape = RoundedCornerShape(20.dp),
         backgroundColor = if (!isSelected) {
             Color.White

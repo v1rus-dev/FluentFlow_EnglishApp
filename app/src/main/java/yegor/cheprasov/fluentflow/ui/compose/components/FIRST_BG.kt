@@ -3,7 +3,6 @@
 package yegor.cheprasov.fluentflow.ui.compose.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -22,7 +21,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import yegor.cheprasov.fluentflow.R
-import yegor.cheprasov.fluentflow.ui.theme.background
 
 private val FIRST_BG = Color(0xFFBD6EEB)
 private val SECOND_BG = Color(0xFFB748F8)
@@ -31,9 +29,11 @@ private val SECOND_BG = Color(0xFFB748F8)
 fun NewWordsAndPhrasesButton(
     modifier: Modifier = Modifier,
     state: NewWordsAndPhrasesState? = null,
+    enable: Boolean = true,
+    showNumbers: Boolean = true,
     onClick: () -> Unit
 ) {
-    Card(onClick = { onClick() }, shape = RoundedCornerShape(24.dp)) {
+    Card(onClick = { onClick() }, enabled = enable, shape = RoundedCornerShape(24.dp)) {
         Box(
             modifier = modifier
                 .width(144.dp)
@@ -71,7 +71,7 @@ fun NewWordsAndPhrasesButton(
                             modifier = Modifier.size(24.dp),
                             colorFilter = ColorFilter.tint(Color.White)
                         )
-                        if (state != null) {
+                        if (state != null && showNumbers) {
                             Text(
                                 text = "${state.learnedAmount}/${state.allAmount}",
                                 color = Color.White,
@@ -99,6 +99,7 @@ fun NewWordsAndPhrasesButton(
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun RelearnWordsButton(
     modifier: Modifier = Modifier,

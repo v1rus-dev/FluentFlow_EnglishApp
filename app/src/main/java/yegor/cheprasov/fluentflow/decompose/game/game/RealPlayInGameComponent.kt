@@ -58,7 +58,6 @@ class RealPlayInGameComponent(
     private fun getListForMode() = scope.launch {
         val list = gameUseCase.getListByMode(gameMode)
 
-        Log.d("myTag", "list: $list")
         if (list.isEmpty()) {
             scope.launch(Dispatchers.Main) {
                 _onBack()

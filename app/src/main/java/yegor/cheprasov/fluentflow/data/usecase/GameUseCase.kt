@@ -17,7 +17,7 @@ class GameUseCase(
     fun observeAll() = gameRepository.observeAll()
 
     suspend fun getListByMode(mode: PlayInGameComponent.GameMode): List<GameEntity> =
-        when(mode) {
+        when (mode) {
             PlayInGameComponent.GameMode.New -> getForNewMode()
             PlayInGameComponent.GameMode.Ended -> getForEndedMode()
             PlayInGameComponent.GameMode.Mix -> getForMixedMode()
@@ -27,15 +27,15 @@ class GameUseCase(
         gameRepository.saveGameAsEnded(gameId)
     }
 
-    private suspend fun getForMixedMode(): List<GameEntity> {
-        Log.d("myTag", "Q: ${levelUseCase.getCurrentLevelIndex()}")
-        return gameRepository.getByLevel(levelUseCase.getCurrentLevelIndex()).shuffled().take(10)
-    }
+    private suspend fun getForMixedMode(): List<GameEntity> =
+        gameRepository.getByLevel(levelUseCase.getCurrentLevelIndex()).shuffled().take(10)
 
     private suspend fun getForEndedMode(): List<GameEntity> =
-        gameRepository.getByLevel(levelUseCase.getCurrentLevelIndex()).filter { it.isEnded }.take(10)
+        gameRepository.getByLevel(levelUseCase.getCurrentLevelIndex()).filter { it.isEnded }
+            .take(10)
 
     private suspend fun getForNewMode(): List<GameEntity> =
-        gameRepository.getByLevel(levelUseCase.getCurrentLevelIndex()).filter { !it.isEnded }.take(10)
+        gameRepository.getByLevel(levelUseCase.getCurrentLevelIndex()).filter { !it.isEnded }
+            .take(10)
 
 }
