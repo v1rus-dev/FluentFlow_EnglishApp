@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "yegor.cheprasov.fluentflow"
+    namespace = "nastya.cheprasova.fluentflow"
     compileSdk = 33
 
     defaultConfig {
-        applicationId = "yegor.cheprasov.fluentflow"
+        applicationId = "nastya.cheprasova.fluentflow"
         minSdk = 24
         targetSdk = 33
         versionCode = 1
